@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlowForge AI</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Automation workspace">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">F</div>
+          <div>
+            <p class="eyebrow">AI automation studio</p>
+            <h1>FlowForge</h1>
+          </div>
+        </div>
+
+        <nav class="side-nav" aria-label="Primary">
+          <a class="active" href="#builder">
+            <span class="nav-icon nav-build" aria-hidden="true"></span>
+            Builder
+          </a>
+          <a href="#runs">
+            <span class="nav-icon nav-runs" aria-hidden="true"></span>
+            Runs
+          </a>
+          <a href="#library">
+            <span class="nav-icon nav-library" aria-hidden="true"></span>
+            Library
+          </a>
+        </nav>
+
+        <section class="panel">
+          <label for="automation-goal">Describe the automation</label>
+          <textarea
+            id="automation-goal"
+            rows="8"
+            placeholder="Example: Every weekday morning, summarize unread support emails, tag urgent ones, and send me a Slack digest."
+          ></textarea>
+          <button class="primary-action" id="generate-button" type="button">
+            <span class="button-icon sparkle-icon" aria-hidden="true"></span>
+            Generate workflow
+          </button>
+        </section>
+
+        <section class="panel compact" id="library">
+          <h2>Quick templates</h2>
+          <div class="template-list">
+            <button type="button" data-preset="support">
+              <span class="template-icon icon-mail" aria-hidden="true"></span>
+              Support digest
+            </button>
+            <button type="button" data-preset="sales">
+              <span class="template-icon icon-leads" aria-hidden="true"></span>
+              Lead routing
+            </button>
+            <button type="button" data-preset="docs">
+              <span class="template-icon icon-docs" aria-hidden="true"></span>
+              Document intake
+            </button>
+          </div>
+        </section>
+
+        <section class="panel compact">
+          <h2>Run settings</h2>
+          <div class="field-row">
+            <label for="schedule-select">Schedule</label>
+            <select id="schedule-select">
+              <option>Every weekday</option>
+              <option>Hourly</option>
+              <option>Daily</option>
+              <option>Weekly</option>
+              <option>Manual trigger</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label for="risk-select">Approval mode</label>
+            <select id="risk-select">
+              <option>Ask before external actions</option>
+              <option>Auto-run safe actions</option>
+              <option>Draft only</option>
+            </select>
+          </div>
+        </section>
+      </aside>
+
+      <section class="workspace" id="builder">
+        <header class="app-header">
+          <div>
+            <p class="eyebrow">Command center</p>
+            <h2>Build dependable AI automations</h2>
+          </div>
+          <div class="header-actions">
+            <button type="button" title="Open activity">
+              <span class="button-icon activity-icon" aria-hidden="true"></span>
+            </button>
+            <button type="button" title="Open settings">
+              <span class="button-icon settings-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </header>
+
+        <section class="hero-banner" aria-label="Automation overview">
+          <div class="hero-copy">
+            <p class="eyebrow">AI-assisted workflow design</p>
+            <h2>Turn repetitive work into reviewed, testable workflows.</h2>
+            <p>
+              FlowForge drafts the trigger, decision logic, approvals, and delivery steps so every automation starts with a clear operating plan.
+            </p>
+          </div>
+          <img
+            src="assets/automation-dashboard.png"
+            alt="Illustration of an AI automation workflow dashboard"
+          />
+        </section>
+
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Generated workflow</p>
+            <h2 id="workflow-title">Ready to build</h2>
+          </div>
+          <div class="actions">
+            <button id="simulate-button" type="button" disabled>
+              <span class="button-icon play-icon" aria-hidden="true"></span>
+              Simulate
+            </button>
+            <button id="export-button" type="button" disabled>
+              <span class="button-icon export-icon" aria-hidden="true"></span>
+              Export JSON
+            </button>
+          </div>
+        </header>
+
+        <section class="status-strip" aria-label="Automation metrics">
+          <article>
+            <span class="metric-icon icon-steps" aria-hidden="true"></span>
+            <span id="step-count">0</span>
+            <p>Steps</p>
+          </article>
+          <article>
+            <span class="metric-icon icon-confidence" aria-hidden="true"></span>
+            <span id="confidence-score">--</span>
+            <p>Confidence</p>
+          </article>
+          <article>
+            <span class="metric-icon icon-shield" aria-hidden="true"></span>
+            <span id="safety-score">--</span>
+            <p>Safety</p>
+          </article>
+        </section>
+
+        <div class="content-grid">
+          <section class="workflow-board" aria-label="Workflow steps">
+            <div class="empty-state" id="empty-state">
+              <h3>Tell FlowForge what repetitive work you want handled.</h3>
+              <p>
+                It will infer triggers, actions, approvals, and a test plan from your prompt.
+              </p>
+            </div>
+            <ol class="steps" id="steps-list"></ol>
+          </section>
+
+          <aside class="assistant-panel" aria-label="AI assistant notes">
+            <div class="assistant-header">
+              <span aria-hidden="true">AI</span>
+              <h3>Assistant notes</h3>
+            </div>
+            <div id="assistant-notes">
+              <p>
+                Add a goal on the left. I will map it into a practical automation with guardrails.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="export-dialog">
+      <form method="dialog">
+        <header>
+          <h2>Workflow JSON</h2>
+          <button aria-label="Close" type="submit">x</button>
+        </header>
+        <pre id="export-output"></pre>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
